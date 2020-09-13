@@ -145,6 +145,9 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 
     /* Detach the node from the queue*/
     q->head = q->head->next;
+    /* Set q->tail to NULL if there's only one element in queue */
+    if (q->head == q->tail)
+        q->tail = NULL;
 
     /* Free the memory used by struct */
     free(delNode->value);
