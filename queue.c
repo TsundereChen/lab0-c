@@ -58,6 +58,12 @@ bool q_insert_head(queue_t *q, char *s)
     strncpy(newh->value, s, strlen(s) + 1);
     newh->next = q->head;
     q->head = newh;
+
+    /* Also set the tail if the tail is NULL */
+    /* This is in case of a newly created queue */
+    if (q->tail == NULL)
+        q->tail = newh;
+
     q->len += 1;
 
     return true;
@@ -93,6 +99,12 @@ bool q_insert_tail(queue_t *q, char *s)
     newt->next = NULL;
     q->tail->next = newt;
     q->tail = newt;
+
+    /* Also set the head if the head is NULL */
+    /* This is in case of a newly created queue */
+    if (q->head == NULL)
+        q->head = newt;
+
     q->len += 1;
     return true;
 }
