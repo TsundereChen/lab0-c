@@ -208,6 +208,43 @@ void q_reverse(queue_t *q)
  */
 void q_sort(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
+    /* Check conditions, if any of them is meet, don't run this function */
+    if (q == NULL)
+        return;
+    if (q->head == NULL || q->tail == NULL)
+        return;
+    if (q->len == 1)
+        return;
+
+    for (unsigned int i = 0; i < q->len; i++) {
+        list_ele_t *prev, *curr, *next;
+        prev = NULL;
+        curr = q->head;
+        next = curr->next;
+        while (curr->next != NULL) {
+            if (strcmp(curr->value, next->value) > 1) {
+                /* Needed to be swapped */
+                curr->next = next->next;
+                next->next = curr;
+                if (prev != NULL)
+                    prev->next = next;
+
+                prev = next;
+                next = curr->next;
+
+                if (curr == q->head)
+                    q->head = prev;
+                if (prev == q->tail)
+                    q->tail = curr;
+
+                // if (curr->next == NULL)
+                //    break;
+            } else {
+                next = next->next;
+                prev = curr;
+                curr = curr->next;
+            }
+        }
+    }
+    return;
 }
