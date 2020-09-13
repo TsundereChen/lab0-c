@@ -23,6 +23,8 @@ queue_t *q_new()
 /* Free all storage used by queue */
 void q_free(queue_t *q)
 {
+    if (q == NULL)
+        return;
     /* Free every node in the queue */
     for (unsigned int i = 0; i < q->len; i++) {
         list_ele_t *delNode;
@@ -163,6 +165,8 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
  */
 int q_size(queue_t *q)
 {
+    if (q == NULL)
+        return 0;
     return q->len;
 }
 
