@@ -135,8 +135,8 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 
     /* Copy value from head to sp first */
     if (sp != NULL) {
-        strncpy(sp, q->head->value, bufsize - 1);
-        sp[bufsize] = '\0';
+        strncpy(sp, q->head->value, bufsize - 2);
+        sp[bufsize - 1] = '\0';
     }
 
     /* Create a new variable to track the node */
