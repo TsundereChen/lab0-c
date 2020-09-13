@@ -107,9 +107,32 @@ bool q_insert_tail(queue_t *q, char *s)
  */
 bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
-    /* TODO: You need to fix up this code. */
-    /* TODO: Remove the above comment when you are about to implement. */
+    /* Return false if q is NULL */
+    if (q == NULL)
+        return false;
+    /* Return false if q->head or q->tail is false */
+    if (q->head == NULL || q->tail == NULL)
+        return false;
+
+    /* Copy value from head to sp first */
+    if (sp != NULL) {
+        strncpy(sp, q->head->value, bufsize - 1);
+        sp[bufsize] = '\0';
+    }
+
+    /* Create a new variable to track the node */
+    list_ele_t *delNode;
+    delNode = q->head;
+
+    /* Detach the node from the queue*/
     q->head = q->head->next;
+
+    /* Free the memory used by struct */
+    free(delNode->value);
+    free(delNode);
+
+    /* Decrease the len of the queue by one */
+    q->len -= 1;
     return true;
 }
 
