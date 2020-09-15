@@ -216,13 +216,14 @@ void q_sort(queue_t *q)
     if (q->len == 1)
         return;
 
-    for (unsigned int i = 0; i < q->len; i++) {
+    for (unsigned int i = q->len; i > 0; i--) {
         list_ele_t *prev, *curr, *next;
         prev = NULL;
         curr = q->head;
         next = curr->next;
-        while (curr->next != NULL) {
-            if (strcmp(curr->value, next->value) > 1) {
+        // while (curr->next != NULL) {
+        for (unsigned int j = 0; j < i - 1; j++) {
+            if (strcmp(curr->value, next->value) > 0) {
                 /* Needed to be swapped */
                 curr->next = next->next;
                 next->next = curr;
@@ -236,9 +237,6 @@ void q_sort(queue_t *q)
                     q->head = prev;
                 if (prev == q->tail)
                     q->tail = curr;
-
-                // if (curr->next == NULL)
-                //    break;
             } else {
                 next = next->next;
                 prev = curr;
