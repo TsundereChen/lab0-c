@@ -206,43 +206,74 @@ void q_reverse(queue_t *q)
  * No effect if q is NULL or empty. In addition, if q has only one
  * element, do nothing.
  */
+
+void split_list(list_ele_t **head, list_ele_t **list1, list_ele_t **list2)
+{
+    list_ele_t **slow = list1;
+    list_ele_t **fast = list2;
+
+    while ((*fast) && (*fast)->next) {
+        *slow = (*slow)->next;
+        *fast = (*fast)->next->next;
+    }
+    // slow is at the midnode
+
+    *list2 = (*slow)->next;
+    // Split actually
+    (*slow)->next = NULL;
+
+    *list1 = *head;
+}
+
+void merge_list(list_ele_t **head, list_ele_t **list1, list_ele_t **list2)
+{
+    list_ele_t **cursor = head;
+
+    while ((*list1) && (*list2)) {
+        if (strcmp((*list1)->value, (*list2)->value) < 0) {
+            *cursor = *list1;
+            *list1 = (*list1)->next;
+        } else {
+            *cursor = *list2;
+            *list2 = (*list2)->next;
+        }
+        cursor = &((*cursor)->next);
+    }
+    // avoid dropped off
+    if (*list1)
+        *cursor = *list1;
+    if (*list2)
+        *cursor = *list2;
+}
+
+void merge_sort(list_ele_t **head)
+{
+    // Base case
+    if (!(*head) || !(*head)->next)
+        return;
+
+    // Splitting list
+    list_ele_t *list1 = *head;
+    list_ele_t *list2 = (*head)->next;
+
+    split_list(head, &list1, &list2);
+
+    // Recursive sorting two list
+    merge_sort(&list1);
+    merge_sort(&list2);
+
+    // Merge sorted lists
+    merge_list(head, &list1, &list2);
+}
+
 void q_sort(queue_t *q)
 {
-    /* Check conditions, if any of them is meet, don't run this function */
-    if (q == NULL)
-        return;
-    if (q->head == NULL || q->tail == NULL)
-        return;
-    if (q->len == 1)
+    /* No effect if q is NULL or empty.*/
+    if (!q || !q->head)
         return;
 
-    for (unsigned int i = q->len; i > 0; i--) {
-        list_ele_t *prev, *curr, *next;
-        prev = NULL;
-        curr = q->head;
-        next = curr->next;
-        // while (curr->next != NULL) {
-        for (unsigned int j = 0; j < i - 1; j++) {
-            if (strcmp(curr->value, next->value) > 0) {
-                /* Needed to be swapped */
-                curr->next = next->next;
-                next->next = curr;
-                if (prev != NULL)
-                    prev->next = next;
+    merge_sort(&q->head);
 
-                prev = next;
-                next = curr->next;
-
-                if (curr == q->head)
-                    q->head = prev;
-                if (prev == q->tail)
-                    q->tail = curr;
-            } else {
-                next = next->next;
-                prev = curr;
-                curr = curr->next;
-            }
-        }
-    }
-    return;
+    while (q->tail->next)
+        q->tail = q->tail->next;
 }
